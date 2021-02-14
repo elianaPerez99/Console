@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "SmallBoi.h"
 #include "FPSProjectile.generated.h"
 
 
 class UProjectileMovementComponent;
 class USphereComponent;
-
+class ASmallBoi;
 
 UCLASS()
 class AFPSProjectile : public AActor
@@ -40,7 +41,7 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
-	UPROPERTY(EditDefaultsOnly, Category = "SmallBoi")
-		TSubclassOf<AActor> smallCube;
+	UPROPERTY(EditDefaultsOnly, Category = "SmallBoiClass")
+		TSubclassOf<ASmallBoi> smallCube;
 };
 

@@ -14,10 +14,13 @@ class FPSGAME_API ASmallBoi : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ASmallBoi();
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+		UStaticMeshComponent* MeshComp;
 
-protected:hhen the game starts or when spawned
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "BombActor")
+		UParticleSystem* ExplosionTemplate;
 	virtual void BeginPlay() override;
-	fdsdsf\\\\
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

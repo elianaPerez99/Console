@@ -37,30 +37,27 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
 	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-
-		FVector Scale = OtherComp->GetComponentScale();
-		Scale *= 0.25f; //>:)
-
-		AActor* cubyBoi = GetWorld()->SpawnActor<AActor>(smallCube, GetActorLocation(), GetActorRotation());
-		AActor* cubyBoi2 = GetWorld()->SpawnActor<AActor>(smallCube, GetActorLocation(), GetActorRotation());
-		AActor* cubyBoi3 = GetWorld()->SpawnActor<AActor>(smallCube, GetActorLocation(), GetActorRotation());
-
-		//if (Scale.GetMin() < 0.5f)
-		//{
-			//OtherActor->Destroy();
-		//}
-		//else
-		//{
-			OtherComp->SetWorldScale3D(Scale);
-		//}
-		
-		//COLOR
-		UMaterialInstanceDynamic* MatInst = OtherComp->CreateAndSetMaterialInstanceDynamic(0);
-		if (MatInst)
+		if (!OtherActor->IsA(ASmallBoi::StaticClass()))
 		{
-			MatInst->SetVectorParameterValue("Color", FLinearColor::MakeRandomColor());
+			OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+
+			FVector Scale = OtherComp->GetComponentScale();
+			Scale *= 0.25f; //>:)
+
+			ASmallBoi* cubyBoi = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
+			cubyBoi->MeshComp->SetWorldScale3D(Scale);
+			cubyBoi->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
+			ASmallBoi* cubyBoi2 = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
+			cubyBoi2->MeshComp->SetWorldScale3D(Scale);
+			cubyBoi2->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
+			ASmallBoi* cubyBoi3 = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
+			cubyBoi3->MeshComp->SetWorldScale3D(Scale);
+			cubyBoi3->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
+			ASmallBoi* cubyBoi4 = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
+			cubyBoi4->MeshComp->SetWorldScale3D(Scale);
+			cubyBoi4->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
 		}
+		OtherActor->Destroy();
 		Destroy();
 	}
 }
