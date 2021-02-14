@@ -40,16 +40,20 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
 		FVector Scale = OtherComp->GetComponentScale();
-		Scale *= .8f; //>:)
+		Scale *= 0.25f; //>:)
 
-		if (Scale.GetMin() < 0.5f)
-		{
-			OtherActor->Destroy();
-		}
-		else
-		{
+		AActor* cubyBoi = GetWorld()->SpawnActor<AActor>(smallCube, GetActorLocation(), GetActorRotation());
+		AActor* cubyBoi2 = GetWorld()->SpawnActor<AActor>(smallCube, GetActorLocation(), GetActorRotation());
+		AActor* cubyBoi3 = GetWorld()->SpawnActor<AActor>(smallCube, GetActorLocation(), GetActorRotation());
+
+		//if (Scale.GetMin() < 0.5f)
+		//{
+			//OtherActor->Destroy();
+		//}
+		//else
+		//{
 			OtherComp->SetWorldScale3D(Scale);
-		}
+		//}
 		
 		//COLOR
 		UMaterialInstanceDynamic* MatInst = OtherComp->CreateAndSetMaterialInstanceDynamic(0);
