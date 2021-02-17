@@ -1,26 +1,46 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "SmallBoi.h"
 #include "ExplodeProj.generated.h"
 
+
+class UProjectileMovementComponent;
+class USphereComponent;
+class ASmallBoi;
+
 UCLASS()
-class FPSGAME_API AExplodeProj : public AActor
+class AExplodeProj : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AExplodeProj();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	/** Sphere collision component */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile")
+		USphereComponent* CollisionComp;
+	UPROPERTY(EditDefaultsOnly, Category = "BombActor")
+		UParticleSystem* ExplosionTemplate;
+	/** Projectile movement component */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+		UProjectileMovementComponent* ProjectileMovement;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
 
+	AExplodeProj();
+
+	/** called when projectile hits something */
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	/** Returns CollisionComp subobject **/
+	USphereComponent* GetCollisionComp() const { return CollisionComp; }
+
+	/** Returns ProjectileMovement subobject **/
+	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+
+	UPROPERTY(EditDefaultsOnly, Category = "SmallBoiClass")
+		TSubclassOf<ASmallBoi> smallCube;
 };

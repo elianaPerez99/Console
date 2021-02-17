@@ -18,7 +18,6 @@ class AFPSProjectile : public AActor
 	GENERATED_BODY()
 
 protected:
-	bool isCharged;
 	/** Sphere collision component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= "Projectile")
 	USphereComponent* CollisionComp;
@@ -31,8 +30,6 @@ protected:
 public:
 
 	AFPSProjectile();
-
-	void Charged();
 
 	/** called when projectile hits something */
 	UFUNCTION()

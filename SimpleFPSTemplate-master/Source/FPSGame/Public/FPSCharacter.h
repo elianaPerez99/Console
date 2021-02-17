@@ -15,6 +15,7 @@ class AFPSProjectile;
 class USoundBase;
 class UAnimSequence;
 class AFPSBombActor;
+class AExplodeProj;
 
 
 UCLASS()
@@ -43,6 +44,10 @@ public:
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category="Projectile")
 	TSubclassOf<AFPSProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+		TSubclassOf<AExplodeProj> AltProjClass;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 		float AltFireDelay;
 	UPROPERTY(EditDefaultsOnly, Category = "Bomb")

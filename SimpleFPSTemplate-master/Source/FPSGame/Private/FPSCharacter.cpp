@@ -56,7 +56,7 @@ void AFPSCharacter::AltFire()
 {
 	if (canAlt)
 	{
-		if (ProjectileClass)
+		if (AltProjClass)
 		{
 			// Grabs location from the mesh that must have a socket called "Muzzle" in his skeleton
 			FVector MuzzleLocation = GunMeshComponent->GetSocketLocation("Muzzle");
@@ -68,8 +68,7 @@ void AFPSCharacter::AltFire()
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 			// spawn the projectile at the muzzle
-			AFPSProjectile* projectile = GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
-			projectile->Charged();
+			AExplodeProj* projectile = GetWorld()->SpawnActor<AExplodeProj>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
 		}
 
 		// try and play the sound if specified
