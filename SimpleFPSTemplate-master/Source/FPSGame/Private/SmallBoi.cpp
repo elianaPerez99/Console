@@ -3,6 +3,7 @@
 
 
 #include "SmallBoi.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASmallBoi::ASmallBoi()
@@ -26,5 +27,11 @@ void ASmallBoi::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASmallBoi::Explode()
+{
+	UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionTemplate, GetActorLocation());
+	Destroy();
 }
 

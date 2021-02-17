@@ -43,7 +43,8 @@ public:
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category="Projectile")
 	TSubclassOf<AFPSProjectile> ProjectileClass;
-
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+		float AltFireDelay;
 	UPROPERTY(EditDefaultsOnly, Category = "Bomb")
 	TSubclassOf<AFPSBombActor> BombClass;
 
@@ -56,11 +57,13 @@ public:
 	UAnimSequence* FireAnimation;
 
 protected:
-	
+	bool canAlt;
 	/** Fires a projectile. */
 	void Fire();
 
 	void SpawnBomb();
+	void SetAlt();
+	void AltFire();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
@@ -76,6 +79,7 @@ public:
 
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return CameraComponent; }
+
 
 };
 

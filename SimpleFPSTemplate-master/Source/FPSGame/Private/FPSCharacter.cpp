@@ -7,10 +7,13 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimSequence.h"
+#include "Components/PrimitiveComponent.h"
 
 
 AFPSCharacter::AFPSCharacter()
 {
+	AltFireDelay = 3.0f;
+	canAlt = true;
 	// Create a CameraComponent	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	CameraComponent->SetupAttachment(GetCapsuleComponent());
@@ -46,8 +49,55 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAction("AltFire", IE_Pressed, this, &AFPSCharacter::AltFire);
 }
 
+void AFPSCharacter::AltFire()
+{
+	if (canAlt)
+	{
+		if (ProjectileClass)
+		{
+			// Grabs location from the mesh that must have a socket called "Muzzle" in his skeleton
+			FVector MuzzleLocation = GunMeshComponent->GetSocketLocation("Muzzle");
+			// Use controller rotation which is our view direction in first person
+			FRotator MuzzleRotation = GetControlRotation();
+
+			//Set Spawn Collision Handling Override
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+			// spawn the projectile at the muzzle
+			AFPSProjectile* projectile = GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+			projectile->Charged();
+		}
+
+		// try and play the sound if specified
+		if (FireSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
+
+		// try and play a firing animation if specified
+		if (FireAnimation)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = Mesh1PComponent->GetAnimInstance();
+			if (AnimInstance)
+			{
+				AnimInstance->PlaySlotAnimationAsDynamicMontage(FireAnimation, "Arms", 0.0f);
+			}
+		}
+		canAlt = false;
+		FTimerHandle Cooldown_TimerHandle;
+		GetWorldTimerManager().SetTimer(Cooldown_TimerHandle, this, &AFPSCharacter::SetAlt, AltFireDelay);
+	}
+}
+
+void AFPSCharacter::SetAlt()
+{
+	canAlt = true;
+}
 
 void AFPSCharacter::Fire()
 {

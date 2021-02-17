@@ -3,9 +3,12 @@
 #include "FPSProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 AFPSProjectile::AFPSProjectile() 
 {
+	isCharged = false;
 	// Use a sphere as a simple collision representation
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	CollisionComp->InitSphereRadius(5.0f);
@@ -31,33 +34,73 @@ AFPSProjectile::AFPSProjectile()
 	InitialLifeSpan = 3.0f;
 }
 
-
+void AFPSProjectile::Charged()
+{
+	isCharged = !isCharged;
+	CollisionComp->ShapeColor = FColor::Purple;
+	CollisionComp->UpdateBodySetup();
+}
 void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
+	if (isCharged)
 	{
-		if (!OtherActor->IsA(ASmallBoi::StaticClass()))
+		if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
 		{
-			OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+			UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionTemplate, GetActorLocation());
+			TArray<FOverlapResult> OutOverlaps;
 
-			FVector Scale = OtherComp->GetComponentScale();
-			Scale *= 0.25f; //>:)
+			FCollisionObjectQueryParams QueryParams;
+			QueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+			QueryParams.AddObjectTypesToQuery(ECC_PhysicsBody);
+			FCollisionShape CollShape;
+			CollShape.SetSphere(500.0f);
 
-			ASmallBoi* cubyBoi = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
-			cubyBoi->MeshComp->SetWorldScale3D(Scale);
-			cubyBoi->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
-			ASmallBoi* cubyBoi2 = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
-			cubyBoi2->MeshComp->SetWorldScale3D(Scale);
-			cubyBoi2->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
-			ASmallBoi* cubyBoi3 = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
-			cubyBoi3->MeshComp->SetWorldScale3D(Scale);
-			cubyBoi3->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
-			ASmallBoi* cubyBoi4 = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
-			cubyBoi4->MeshComp->SetWorldScale3D(Scale);
-			cubyBoi4->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
+			GetWorld()->OverlapMultiByObjectType(OutOverlaps, GetActorLocation(), FQuat::Identity, QueryParams, CollShape);
+
+			for (FOverlapResult Result : OutOverlaps)
+			{
+				UPrimitiveComponent* Overlap = Result.GetComponent();
+				if (Overlap && Overlap->IsSimulatingPhysics())
+				{
+					Result.Actor->Destroy();
+				}
+			}
+			Destroy();
 		}
-		OtherActor->Destroy();
-		Destroy();
+		
+	}
+	else
+	{
+		// Only add impulse and destroy projectile if we hit a physics
+		if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
+		{
+			if (!OtherActor->IsA(ASmallBoi::StaticClass()))
+			{
+				OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+
+				FVector Scale = OtherComp->GetComponentScale();
+				Scale *= 0.25f; //>:)
+
+				ASmallBoi* cubyBoi = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
+				cubyBoi->MeshComp->SetWorldScale3D(Scale);
+				cubyBoi->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
+				ASmallBoi* cubyBoi2 = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
+				cubyBoi2->MeshComp->SetWorldScale3D(Scale);
+				cubyBoi2->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
+				ASmallBoi* cubyBoi3 = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
+				cubyBoi3->MeshComp->SetWorldScale3D(Scale);
+				cubyBoi3->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
+				ASmallBoi* cubyBoi4 = GetWorld()->SpawnActor<ASmallBoi>(smallCube, GetActorLocation(), GetActorRotation());
+				cubyBoi4->MeshComp->SetWorldScale3D(Scale);
+				cubyBoi4->MeshComp->AddImpulseAtLocation(GetVelocity() * 10.0f, GetActorLocation());
+				OtherActor->Destroy();
+			}
+			else
+			{
+				((ASmallBoi*)OtherActor)->Explode();
+			}
+
+			Destroy();
+		}
 	}
 }

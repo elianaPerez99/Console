@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "SmallBoi.generated.h"
 
+class UParticleSystem;
 UCLASS()
 class FPSGAME_API ASmallBoi : public AActor
 {
@@ -16,6 +17,8 @@ public:
 	ASmallBoi();
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		UStaticMeshComponent* MeshComp;
+	UFUNCTION()
+		void Explode();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "BombActor")
