@@ -26,7 +26,6 @@ protected:
 	/** Projectile movement component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 		UProjectileMovementComponent* ProjectileMovement;
-
 public:
 
 	AExplodeProj();

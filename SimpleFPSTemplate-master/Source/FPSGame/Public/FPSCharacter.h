@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "FPSBombActor.h"
+#include "ExplodeProj.h"
 #include "FPSCharacter.generated.h"
 
 
