@@ -14,6 +14,7 @@ AFPSCharacter::AFPSCharacter()
 {
 	AltFireDelay = 3.0f;
 	canAlt = true;
+	startTime = 0;
 	// Create a CameraComponent	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	CameraComponent->SetupAttachment(GetCapsuleComponent());
@@ -49,11 +50,29 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAction("BoostHold", IE_Pressed, this, &AFPSCharacter::BoostHold);
+	PlayerInputComponent->BindAction("BoostRelease", IE_Released, this, &AFPSCharacter::BoostRelease);
 	PlayerInputComponent->BindAction("AltFire", IE_Pressed, this, &AFPSCharacter::AltFire);
 }
 
+//get the time when shift starts being pressed
+void AFPSCharacter::BoostHold()
+{
+	startTime = GetWorld()->GetTimeSeconds();
+}
+
+//bind scale
+void AFPSCharacter::BoostRelease()
+{
+	//resetting start time for next shot
+	startTime = 0;
+
+}
 void AFPSCharacter::AltFire()
 {
+	//getting the scale for the explosion
+	float scale = GetWorld()->GetTimeSeconds() - startTime;
+
 	if (canAlt)
 	{
 		if (AltProjClass)
@@ -69,6 +88,7 @@ void AFPSCharacter::AltFire()
 
 			// spawn the projectile at the muzzle
 			AExplodeProj* projectile = GetWorld()->SpawnActor<AExplodeProj>(AltProjClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+			projectile->SetScale(scale);
 		}
 
 		// try and play the sound if specified

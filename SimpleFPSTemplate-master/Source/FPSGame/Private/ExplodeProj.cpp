@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Particles/ParticleSystemComponent.h"
 
 AExplodeProj::AExplodeProj()
 {
@@ -34,11 +35,21 @@ AExplodeProj::AExplodeProj()
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
 }
+
+void AExplodeProj::SetScale(float scale)
+{
+	mScale = scale;
+}
+
 void AExplodeProj::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 		if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
 		{
-			UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionTemplate, GetActorLocation());
+			UParticleSystemComponent* ps = UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionTemplate, GetActorLocation());
+			if (ps != nullptr)
+			{
+				ps->SetWorldScale3D(FVector(mScale));
+			}
 			TArray<FOverlapResult> OutOverlaps;
 
 			FCollisionObjectQueryParams QueryParams;

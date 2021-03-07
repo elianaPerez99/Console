@@ -38,6 +38,7 @@ protected:
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComponent;
+	float startTime;
 
 public:
 	AFPSCharacter();
@@ -69,7 +70,15 @@ protected:
 
 	void SpawnBomb();
 	void SetAlt();
+
+	UFUNCTION()
 	void AltFire();
+	//when shift pressed
+	UFUNCTION()
+	void BoostHold();
+	//when shift released
+	UFUNCTION()
+	void BoostRelease();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
