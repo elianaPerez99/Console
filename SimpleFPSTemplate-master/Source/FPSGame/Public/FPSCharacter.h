@@ -22,8 +22,9 @@ class AExplodeProj;
 UCLASS()
 class AFPSCharacter : public ACharacter
 {
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParams(FPartyTime, float r, float g, float b); //we stopped working here
 	GENERATED_BODY()
-
+		
 protected:
 
 	/** Pawn mesh: 1st person view  */
@@ -71,6 +72,9 @@ protected:
 	void SpawnBomb();
 	void SetAlt();
 
+	//the function that holds the delegate stuff
+	UFUNCTION()
+		void PartyTime();
 	UFUNCTION()
 	void AltFire();
 	//when shift pressed

@@ -53,6 +53,13 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("BoostHold", IE_Pressed, this, &AFPSCharacter::BoostHold);
 	PlayerInputComponent->BindAction("BoostRelease", IE_Released, this, &AFPSCharacter::BoostRelease);
 	PlayerInputComponent->BindAction("AltFire", IE_Pressed, this, &AFPSCharacter::AltFire);
+	PlayerInputComponent->BindAction("PartyTime", IE_Pressed, this, &AFPSCharacter::PartyTime);
+}
+
+
+void AFPSCharacter::PartyTime()
+{
+	
 }
 
 //get the time when shift starts being pressed
