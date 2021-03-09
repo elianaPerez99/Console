@@ -8,10 +8,12 @@
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimSequence.h"
 #include "Components/PrimitiveComponent.h"
+#include "Math/Color.h"
 
 
 AFPSCharacter::AFPSCharacter()
 {
+	ChangeColorDelegate.Add(&ASmallBoi::ChangeLeColor);
 	AltFireDelay = 3.0f;
 	canAlt = true;
 	startTime = 0;
@@ -59,7 +61,8 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void AFPSCharacter::PartyTime()
 {
-	
+	//tell all the objects to change le color
+	ChangeColorDelegate.Broadcast();
 }
 
 //get the time when shift starts being pressed

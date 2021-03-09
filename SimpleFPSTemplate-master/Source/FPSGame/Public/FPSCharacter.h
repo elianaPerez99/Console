@@ -18,11 +18,13 @@ class UAnimSequence;
 class AFPSBombActor;
 class AExplodeProj;
 
+//declare delegate
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPartyTimeDelegate);
 
 UCLASS()
 class AFPSCharacter : public ACharacter
 {
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParams(FPartyTime, float r, float g, float b); //we stopped working here
+
 	GENERATED_BODY()
 		
 protected:
@@ -93,6 +95,8 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 public:
+	FPartyTimeDelegate ChangeColorDelegate;
+
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1PComponent; }
 

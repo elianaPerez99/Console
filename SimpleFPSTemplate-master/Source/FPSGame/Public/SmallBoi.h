@@ -19,11 +19,14 @@ public:
 		UStaticMeshComponent* MeshComp;
 	UFUNCTION()
 		void Explode();
+	UFUNCTION()
+		void ChangeLeColor();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "BombActor")
 		UParticleSystem* ExplosionTemplate;
 	virtual void BeginPlay() override;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
