@@ -21,6 +21,7 @@ class AExplodeProj;
 //declare delegate
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPartyTimeDelegate);
 
+
 UCLASS()
 class AFPSCharacter : public ACharacter
 {
@@ -95,7 +96,7 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 public:
-	FPartyTimeDelegate ChangeColorDelegate;
+	FPartyTimeDelegate StartPartyTimeDelegate;
 
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1PComponent; }

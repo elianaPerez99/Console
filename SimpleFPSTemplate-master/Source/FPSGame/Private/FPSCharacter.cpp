@@ -2,6 +2,7 @@
 
 #include "FPSCharacter.h"
 #include "FPSProjectile.h"
+#include "SmallBoi.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -13,7 +14,6 @@
 
 AFPSCharacter::AFPSCharacter()
 {
-	ChangeColorDelegate.Add(&ASmallBoi::ChangeLeColor);
 	AltFireDelay = 3.0f;
 	canAlt = true;
 	startTime = 0;
@@ -62,7 +62,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void AFPSCharacter::PartyTime()
 {
 	//tell all the objects to change le color
-	ChangeColorDelegate.Broadcast();
+	StartPartyTimeDelegate.Broadcast();
 }
 
 //get the time when shift starts being pressed

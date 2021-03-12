@@ -13,6 +13,8 @@
 // Sets default values
 ASmallBoi::ASmallBoi()
 {
+	AFPSCharacter* player = Cast<AFPSCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	player->StartPartyTimeDelegate.AddDynamic(this, &ASmallBoi::ChangeLeColor);
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 

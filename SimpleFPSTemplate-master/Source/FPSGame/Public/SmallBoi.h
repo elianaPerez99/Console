@@ -7,6 +7,7 @@
 #include "SmallBoi.generated.h"
 
 class UParticleSystem;
+
 UCLASS()
 class FPSGAME_API ASmallBoi : public AActor
 {
