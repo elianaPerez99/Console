@@ -8,13 +8,16 @@
 #include "Math/UnrealMathUtility.h"
 #include "Engine/Engine.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "UObject/UObjectGlobals.h"
 #include "GameFramework/GameStateBase.h"
+#include <string>
+ 
+using namespace std;
 
 // Sets default values
 ASmallBoi::ASmallBoi()
 {
-	AFPSCharacter* player = Cast<AFPSCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	player->StartPartyTimeDelegate.AddDynamic(this, &ASmallBoi::ChangeLeColor);
+	
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -25,14 +28,23 @@ ASmallBoi::ASmallBoi()
 // Called when the game starts or when spawned
 void ASmallBoi::BeginPlay()
 {
+	
 	Super::BeginPlay();
-}
 
+	//set one material instance that we can manipulate as needed
+	UMaterialInterface* material = MeshComp->GetMaterial(0);
+	MatInst = UMaterialInstanceDynamic::Create(material, this);
+
+	//bind delegate
+	AFPSCharacter* player = Cast<AFPSCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	player->StartPartyTimeDelegate.AddDynamic(this, &ASmallBoi::ChangeLeColor);
+}
 
 //change color of this cube
 void ASmallBoi::ChangeLeColor()
 {
-	int random = FMath::RandRange(1.0f, 3.0f);
+	//getting random color
+	int random = FMath::RandRange(1.0f, 4.0f);
 	FColor color;
 	color.A = 255;
 	if (random == 1)
@@ -53,11 +65,14 @@ void ASmallBoi::ChangeLeColor()
 		color.G = 205;
 		color.B = 252;
 	}
-	UMaterialInterface* material = MeshComp->GetMaterial(0);
-	UMaterialInstanceDynamic* MatInst = UMaterialInstanceDynamic::Create(material, this);
+
+	//check if valid and changing the color
 	if (MatInst)
 	{
 		MatInst->SetVectorParameterValue("Color", color);
+		MeshComp->SetMaterial(0, MatInst);
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("should change color"));
 	}
 }
 

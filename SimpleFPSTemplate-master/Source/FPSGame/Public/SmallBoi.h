@@ -7,6 +7,7 @@
 #include "SmallBoi.generated.h"
 
 class UParticleSystem;
+class UProjectileMovementComponent;
 
 UCLASS()
 class FPSGAME_API ASmallBoi : public AActor
@@ -18,15 +19,19 @@ public:
 	ASmallBoi();
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		UStaticMeshComponent* MeshComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+		UProjectileMovementComponent* ProjectileMovement;
 	UFUNCTION()
 		void Explode();
 	UFUNCTION()
 		void ChangeLeColor();
+	
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "BombActor")
 		UParticleSystem* ExplosionTemplate;
 	virtual void BeginPlay() override;
+	UMaterialInstanceDynamic* MatInst;
 	
 public:	
 	// Called every frame
