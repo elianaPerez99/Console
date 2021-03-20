@@ -53,25 +53,37 @@ void AAJSonChar::ReadTemp()
         // Get the forecast property from a period
         TSharedPtr<FJsonObject> currentObject = objArray[0]->AsObject();
         FString forecast = currentObject->GetStringField("shortForecast");
+        bool isDay = currentObject->GetBoolField("isDaytime");
         FString debug = "this is the forecast: " + forecast;
         if (GEngine)
             GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, debug);
         // Now find something to do with this information?
         FColor color = ReturnSkyColor(forecast);
         Sky->SetLightColor(color);
+        ChangeIntensity(isDay);
+    }
+}
+void AAJSonChar::ChangeIntensity(bool intensity)
+{
+    if (intensity)
+    {
+        Sky->SetIntensity(30.0f);
+    }
+    else
+    {
+        Sky->SetIntensity(5.0f);
     }
 }
 
 FColor AAJSonChar::ReturnSkyColor(FString forecast)
 {
+    //this function sets the light color to whatever matches the forecast
     FColor retval = FColor::Magenta; //this default magenta is to tell if we missed a type of forecast
-    if (GEngine)
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue,forecast);
     if (forecast.Equals("Clear"))
     {
         retval = FColor(103, 131, 142);
     }
-    else if (forecast.Contains("Sunny")) //we did contains because there are a lot of partly/mostly cloudy or chance of in the strings
+    else if (forecast.Contains("Sunny")) //we used contains because there are a lot of partly/mostly cloudy or chance of in the strings
     {
         retval = FColor(253, 238, 115);
     }
